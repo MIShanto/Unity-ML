@@ -9,6 +9,8 @@ public class DNA : MonoBehaviour
     public float green;
     public float blue;
 
+    public float scale;
+
     bool isDead = false;
 
     public float timeToDie = 0f;
@@ -22,6 +24,7 @@ public class DNA : MonoBehaviour
         col = GetComponent<Collider2D>();
 
         sr.color = new Color(red, green, blue);
+        transform.localScale = new Vector3(scale, scale, scale);
     }
 
     private void OnMouseDown()

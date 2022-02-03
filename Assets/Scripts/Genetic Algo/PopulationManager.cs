@@ -40,6 +40,7 @@ public class PopulationManager : MonoBehaviour
             obj.GetComponent<DNA>().red = UnityEngine.Random.Range(0, 1f);
             obj.GetComponent<DNA>().green = UnityEngine.Random.Range(0, 1f);
             obj.GetComponent<DNA>().blue = UnityEngine.Random.Range(0, 1f);
+            obj.GetComponent<DNA>().scale = UnityEngine.Random.Range(0.1f, 0.3f);
 
             population.Add(obj);
         }
@@ -97,6 +98,7 @@ public class PopulationManager : MonoBehaviour
             offSpring.GetComponent<DNA>().red = UnityEngine.Random.Range(0, 10) < 5 ? dna1.red : dna2.red;
             offSpring.GetComponent<DNA>().green = UnityEngine.Random.Range(0, 10) < 5 ? dna1.green : dna2.green;
             offSpring.GetComponent<DNA>().blue = UnityEngine.Random.Range(0, 10) < 5 ? dna1.blue : dna2.blue;
+            offSpring.GetComponent<DNA>().scale = UnityEngine.Random.Range(0, 10) < 5 ? dna1.scale : dna2.scale;
         }
         else
         {
@@ -104,6 +106,7 @@ public class PopulationManager : MonoBehaviour
             offSpring.GetComponent<DNA>().red = UnityEngine.Random.Range(0, 10);
             offSpring.GetComponent<DNA>().green = UnityEngine.Random.Range(0, 10);
             offSpring.GetComponent<DNA>().blue = UnityEngine.Random.Range(0, 10);
+            offSpring.GetComponent<DNA>().scale = UnityEngine.Random.Range(0.1f, 0.3f);
         }
         
 
