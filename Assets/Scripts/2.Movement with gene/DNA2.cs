@@ -53,7 +53,7 @@ public class DNA2
 
     public void Mutate()
     {
-        genes[Random.Range(0, maxValues)] = Random.Range(0, maxValues);
+        genes[Random.Range(0, dnaLength)] = Random.Range(0, maxValues);
     }
 
     public int GetGene(int pos)
