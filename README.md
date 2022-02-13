@@ -5,5 +5,5 @@
 3. GA with senses
 4. Maze walking
 5. Flappy type
-6. perceptron
+6. perceptron <br>
 6.1 perceptron with visual
