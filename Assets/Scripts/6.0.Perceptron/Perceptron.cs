@@ -16,6 +16,7 @@ public class Perceptron : MonoBehaviour {
 	double bias = 0;
 	double totalError = 0;
 
+	[SerializeField] SimpleGrapher sg;
 	double DotProductBias(double[] v1, double[] v2) 
 	{
 		if (v1 == null || v2 == null)
@@ -86,12 +87,35 @@ public class Perceptron : MonoBehaviour {
 		}
 	}
 
+	void DrawAllPoints()
+	{
+		for (int i = 0; i < ts.Length; i++)
+		{
+			if (ts[i].output == 0)
+			{
+				sg.DrawPoint((float)ts[i].input[0], (float)ts[i].input[1], Color.magenta);		
+			}
+			else
+				sg.DrawPoint((float)ts[i].input[0], (float)ts[i].input[1], Color.green);
+
+		}
+	}
 	void Start () {
 		Train(8);
-		Debug.Log("Test 0 0: " + CalcOutput(0,0));
-		Debug.Log("Test 0 1: " + CalcOutput(0,1));
-		Debug.Log("Test 1 0: " + CalcOutput(1,0));
-		Debug.Log("Test 1 1: " + CalcOutput(1,1));		
+		DrawAllPoints();
+		sg.DrawRay((float)(-(bias/weights[1])/(bias/weights[0])), (float)(-bias/weights[1]), Color.red);
+
+		//Test set...
+		//1st parameter = how sharp it is
+		//2nd parameter = how edible it is
+		if (CalcOutput(0.3f, 0.9f) == 0)
+			sg.DrawPoint(0.3f, 0.9f, Color.red);
+		else
+			sg.DrawPoint(0.3f, 0.9f, Color.yellow);
+		if (CalcOutput(0.8f, 0.1f) == 0)
+			sg.DrawPoint(0.8f, 0.1f, Color.red);
+		else
+			sg.DrawPoint(0.8f, 0.1f, Color.yellow);
 	}
 	
 	void Update () {
