@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ANN
+public class ANN2
 {
     public int numInputs;
     public int numOutputs;
@@ -14,7 +14,7 @@ public class ANN
 
     List<Layer> layers = new List<Layer>();
 
-    public ANN(int nI, int nO, int nH, int nNPH, double a)
+    public ANN2(int nI, int nO, int nH, int nNPH, double a)
     {
         numInputs = nI;
         numOutputs = nO;
@@ -28,7 +28,7 @@ public class ANN
 
             for (int i = 0; i < numHidden - 1; i++)
             {
-                layers.Add(new Layer(numNeuronPerHidden, numNeuronPerHidden)); // other hidden layers 
+                layers.Add(new Layer(numNeuronPerHidden, numNeuronPerHidden)); // other hidden layers
             }
 
             layers.Add(new Layer(numOutputs, numNeuronPerHidden)); // output layer
@@ -39,7 +39,17 @@ public class ANN
         }
     }
 
-    public List<double> Go(List<double> inputValues, List<double> desiredOutput)
+    public List<double> Train(List<double> inputValues, List<double> desiredOutput)
+    {
+        List<double> outputValues = new List<double>();
+
+        outputValues = CalcOutput(inputValues, desiredOutput);
+        UpdateWeights(outputValues, desiredOutput);
+
+        return outputValues;
+    }
+
+    public List<double> CalcOutput(List<double> inputValues, List<double> desiredOutput)
     {
         List<double> inputs = new List<double>();
         List<double> outputs = new List<double>();
@@ -51,11 +61,11 @@ public class ANN
             return outputs;
         }
 
-        //put inputs into the list.
+        //put inputs into the list. 
         inputs = new List<double>(inputValues);
 
         //process input and do forward propagation..
-        for (int i = 0; i < numHidden + 1 ; i++) // loop through all layers
+        for (int i = 0; i < numHidden + 1; i++) // loop through all layers
         {
             if (i > 0) // for other than input layer, inputs = previous outputs
             {
@@ -66,7 +76,7 @@ public class ANN
             // process all the neurons of a particular layer..
             for (int j = 0; j < layers[i].numNeurons; j++)
             {
-                double singleNeuronResultBeforeActivation  = 0;
+                double singleNeuronResultBeforeActivation = 0;
                 layers[i].neurons[j].inputs.Clear(); // clear all inputs first..
 
                 //process all the input,weights, bias of a particular neuron..
@@ -82,7 +92,7 @@ public class ANN
                 // subtracting the bias
                 singleNeuronResultBeforeActivation -= layers[i].neurons[j].bias;
 
-                if(i == numHidden) // for out layer
+                if (i == numHidden) // for out layer
                     layers[i].neurons[j].output = ActivationFunctionO(singleNeuronResultBeforeActivation);
                 else
                     layers[i].neurons[j].output = ActivationFunction(singleNeuronResultBeforeActivation);
@@ -91,7 +101,7 @@ public class ANN
             }
         }
 
-        UpdateWeights(outputs, desiredOutput);
+        //UpdateWeights(outputs, desiredOutput);
 
         return outputs;
     }
@@ -122,10 +132,10 @@ public class ANN
                     double errorGradSum = 0;
 
                     // calculate from next/following layers neuron
-                    for (int m = 0; m < layers[i+1].numNeurons; m++)
+                    for (int m = 0; m < layers[i + 1].numNeurons; m++)
                     {
                         //errorGradSum = SUM(error grad * weights)
-                        errorGradSum += layers[i + 1].neurons[m].errorGradient * layers[i+1].neurons[m].weights[j];
+                        errorGradSum += layers[i + 1].neurons[m].errorGradient * layers[i + 1].neurons[m].weights[j];
                     }
                     layers[i].neurons[j].errorGradient *= errorGradSum;
                 }
@@ -153,14 +163,50 @@ public class ANN
         }
     }
 
+
+    public string PrintWeights()
+    {
+        string weightStr = "";
+        foreach (Layer l in layers)
+        {
+            foreach (Neuron n in l.neurons)
+            {
+                foreach (double w in n.weights)
+                {
+                    weightStr += w + ",";
+                }
+            }
+        }
+        return weightStr;
+    }
+
+    public void LoadWeights(string weightStr)
+    {
+        if (weightStr == "") return;
+        string[] weightValues = weightStr.Split(',');
+        int w = 0;
+        foreach (Layer l in layers)
+        {
+            foreach (Neuron n in l.neurons)
+            {
+                for (int i = 0; i < n.weights.Count; i++)
+                {
+                    n.weights[i] = System.Convert.ToDouble(weightValues[w]);
+                    w++;
+                }
+            }
+        }
+    }
+
+
     #region Activation Functions..
     double ActivationFunction(double value)
     {
-        return Relu(value);
+        return TanH(value);
     }
     double ActivationFunctionO(double value)
     {
-        return Sigmoid(value);
+        return TanH(value);
     }
 
     private double TanH(double value)
@@ -187,7 +233,7 @@ public class ANN
     }
     double LeakyRelu(double value)
     {
-        if (value < 0) return 0.01*value;
+        if (value < 0) return 0.01 * value;
         else return value;
     }
 
