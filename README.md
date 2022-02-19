@@ -10,3 +10,5 @@
 7. Perceptron learn on the fly <br>
 7.1 Save/Load data to/from file. (Perceptron learn on the fly)
 8. XOR operation using Artificial Neural Network (from scratch)
+9. pong using ANN
+10. 
